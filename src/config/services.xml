@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <!--controllers-->
+        <service id="controller.console" class="Controller\ConsoleController">
+            <argument type="service" id="battlefield_creator"/>
+            <argument type="service" id="battlefield_formatter"/>
+            <argument type="service" id="input_handler"/>
+            <argument type="service" id="shoot_manager"/>
+            <argument type="service" id="battlefield"/>
+            <argument type="service" id="console_output_manager"/>
+        </service>
+
+
+        <!--Game-->
+        <service id="battlefield" class="Battleships\Game\Battlefield">
+            <argument type="service" id="fleet"/>
+        </service>
+
+        <service id="fleet" class="Battleships\Game\Fleet">
+            <argument type="collection">
+                <!--<argument type="service" id="ship.battleship" strict="false"/>-->
+                <!--<argument type="service" id="ship.destroyer" strict="false"/>-->
+                <argument type="service" id="ship.destroyer" strict="false"/>
+            </argument>
+        </service>
+
+        <!--Battleship helpers-->
+        <service id="battlefield_creator" class="Battleships\Helper\BattlefieldCreator">
+            <argument type="service" id="battlefield"/>
+            <argument type="service" id="battlefield_deployer"/>
+        </service>
+
+        <service id="battlefield_deployer" class="Battleships\Helper\BattlefieldDeployer">
+            <argument type="service" id="fleet"/>
+        </service>
+
+        <service id="shoot_manager" class="Battleships\Helper\ShootManager">
+            <argument type="service" id="battlefield"/>
+        </service>
+
+        <!--Formatter-->
+        <service id="battlefield_formatter" class="Battleships\Formatter\BattlefieldFormatter">
+            <argument type="service" id="battlefield"/>
+            <argument type="service" id="shoot_manager"/>
+        </service>
+
+        <!--Input-->
+        <service id="input_handler" class="Battleships\Input\InputHandler">
+            <argument type="service" id="input_validation"/>
+        </service>
+
+        <service id="input_validation" class="Battleships\Input\InputValidation"/>
+
+        <!--Output-->
+        <service id="console_output_manager" class="Output\ConsoleOutputManager">
+            <argument type="service" id="console_output"/>
+        </service>
+
+        <service id="console_output" class="Output\ConsoleOutput"/>
+
+        <!--ships-->
+        <service id="ship.battleship" class="Battleships\Game\Battleship" scope="prototype"/>
+        <service id="ship.destroyer" class="Battleships\Game\Destroyer" scope="prototype"/>
+
+        <!--Commands-->
+        <service id="framework.battleship_command" class="Framework\Console\BattleshipsCommand">
+            <argument type="service" id="controller.console"/>
+            <argument type="service" id="console_output_manager"/>
+        </service>
+
+    </services>
+
+</container>
