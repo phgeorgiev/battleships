@@ -17,13 +17,11 @@ $loader->load(__DIR__ . '/src/config/services.xml');
 $container->setParameter('document_root', __DIR__);
 $container->compile();
 
-$dispatcher = new EventDispatcher();
-
 if (php_sapi_name() == 'cli') {
     $app = new ConsoleApplication($container);
 }
 else {
-    $app = new WebApplication($container, $dispatcher);
+    $app = new WebApplication($container, new EventDispatcher());
 }
 
 $app->run();
