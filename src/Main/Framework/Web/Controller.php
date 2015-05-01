@@ -4,6 +4,7 @@ namespace Framework\Web;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 abstract class Controller
 {
@@ -31,6 +32,10 @@ abstract class Controller
         if (!file_exists($templatePath)) {
             throw new \Exception("Template $template is missing!");
         }
+
+        /** @var Session $session */
+        $session = $this->container->get('session');
+        $params['flashMessage'] = $session->getFlashBag()->get('notice');
 
         ob_start();
         extract($params, EXTR_SKIP);

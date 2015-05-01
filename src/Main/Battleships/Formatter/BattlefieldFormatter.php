@@ -5,7 +5,7 @@ namespace Battleships\Formatter;
 use Battleships\Game\Battlefield;
 use Battleships\Game\Coordinate;
 use Battleships\Helper\BattlefieldCreator;
-use Battleships\Helper\ShootManager;
+use Battleships\Helper\ShotsManager;
 use Helper\AlphabetHelper;
 
 class BattlefieldFormatter
@@ -22,11 +22,11 @@ class BattlefieldFormatter
     private $battlefield;
 
     /**
-     * @var ShootManager
+     * @var ShotsManager
      */
     private $shootManager;
 
-    public function __construct(Battlefield $battlefield, ShootManager $shootManager)
+    public function __construct(Battlefield $battlefield, ShotsManager $shootManager)
     {
         $this->battlefield = $battlefield;
         $this->shootManager = $shootManager;
@@ -66,7 +66,7 @@ class BattlefieldFormatter
             return self::EMPTY_FIELD;
         }
 
-        if ($this->shootManager->hasShoot($coordinate)) {
+        if ($this->shootManager->hasShot($coordinate)) {
             if ($this->shootManager->hasHit($coordinate)) {
                 return self::HIT;
             }

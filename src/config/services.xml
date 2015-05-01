@@ -11,11 +11,17 @@
             <argument type="service" id="battlefield_creator"/>
             <argument type="service" id="battlefield_formatter"/>
             <argument type="service" id="input_handler"/>
-            <argument type="service" id="shoot_manager"/>
+            <argument type="service" id="shots_manager"/>
             <argument type="service" id="battlefield"/>
-            <argument type="service" id="console_output_manager"/>
         </service>
 
+        <service id="controller.http" class="Controller\HttpController">
+            <argument type="service" id="input_handler"/>
+            <argument type="service" id="battlefield_formatter"/>
+            <argument type="service" id="battlefield_creator"/>
+            <argument type="service" id="shots_manager"/>
+            <argument type="service" id="battlefield"/>
+        </service>
 
         <!--Game-->
         <service id="battlefield" class="Battleships\Game\Battlefield">
@@ -23,31 +29,34 @@
         </service>
 
         <service id="fleet" class="Battleships\Game\Fleet">
-            <argument type="collection">
-                <!--<argument type="service" id="ship.battleship" strict="false"/>-->
-                <!--<argument type="service" id="ship.destroyer" strict="false"/>-->
-                <argument type="service" id="ship.destroyer" strict="false"/>
-            </argument>
+            <call method="setFleet">
+                <argument type="collection">
+                    <argument type="service" id="ship.battleship" strict="false"/>
+                    <argument type="service" id="ship.destroyer" strict="false"/>
+                    <argument type="service" id="ship.destroyer" strict="false"/>
+                </argument>
+            </call>
         </service>
 
         <!--Battleship helpers-->
         <service id="battlefield_creator" class="Battleships\Helper\BattlefieldCreator">
             <argument type="service" id="battlefield"/>
             <argument type="service" id="battlefield_deployer"/>
+            <argument type="service" id="shots_manager"/>
         </service>
 
         <service id="battlefield_deployer" class="Battleships\Helper\BattlefieldDeployer">
             <argument type="service" id="fleet"/>
         </service>
 
-        <service id="shoot_manager" class="Battleships\Helper\ShootManager">
+        <service id="shots_manager" class="Battleships\Helper\ShotsManager">
             <argument type="service" id="battlefield"/>
         </service>
 
         <!--Formatter-->
         <service id="battlefield_formatter" class="Battleships\Formatter\BattlefieldFormatter">
             <argument type="service" id="battlefield"/>
-            <argument type="service" id="shoot_manager"/>
+            <argument type="service" id="shots_manager"/>
         </service>
 
         <!--Input-->
@@ -73,6 +82,9 @@
             <argument type="service" id="controller.console"/>
             <argument type="service" id="console_output_manager"/>
         </service>
+
+        <!--Framework-->
+        <service id="session" class="Symfony\Component\HttpFoundation\Session\Session"/>
 
     </services>
 

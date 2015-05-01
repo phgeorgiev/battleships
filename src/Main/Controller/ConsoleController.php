@@ -5,7 +5,7 @@ namespace Controller;
 use Battleships\Formatter\BattlefieldFormatter;
 use Battleships\Game\Battlefield;
 use Battleships\Helper\BattlefieldCreator;
-use Battleships\Helper\ShootManager;
+use Battleships\Helper\ShotsManager;
 use Battleships\Input\InputHandler;
 use Exception\DebugException;
 use Exception\NoInputException;
@@ -32,7 +32,7 @@ class ConsoleController extends Controller
     private $inputHandler;
 
     /**
-     * @var ShootManager
+     * @var ShotsManager
      */
     private $shootManager;
 
@@ -45,13 +45,13 @@ class ConsoleController extends Controller
      * @param BattlefieldCreator $battlefieldCreator
      * @param BattlefieldFormatter $formatter
      * @param InputHandler $handler
-     * @param ShootManager $shootManager
+     * @param ShotsManager $shootManager
      * @param Battlefield $battlefield
      */
     public function __construct(BattlefieldCreator $battlefieldCreator,
                                 BattlefieldFormatter $formatter,
                                 InputHandler $handler,
-                                ShootManager $shootManager,
+                                ShotsManager $shootManager,
                                 Battlefield $battlefield)
     {
         $this->battlefieldCreator = $battlefieldCreator;
@@ -86,7 +86,7 @@ class ConsoleController extends Controller
         }
 
         if ($this->shootManager->isBattlefieldDestroyed()) {
-            $shootNumber = $this->shootManager->getShootsCount();
+            $shootNumber = $this->shootManager->getShotsCount();
 
             return $this->render($this->formatter->format(), ConsoleOutputManager::SUNK_MESSAGE, $shootNumber);
         }

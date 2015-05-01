@@ -13,9 +13,17 @@ class Fleet implements \IteratorAggregate, \Countable
     /**
      * @param array $fleet
      */
-    public function __construct(array $fleet)
+    public function setFleet(array $fleet)
     {
         $this->fleet = $fleet;
+    }
+
+    /**
+     * @return Ship[]
+     */
+    public function getFleet()
+    {
+        return $this->fleet;
     }
 
     /**

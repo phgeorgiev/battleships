@@ -15,6 +15,9 @@ class Battlefield
      */
     private $shootPoints;
 
+    /**
+     * @param Fleet $fleet
+     */
     public function __construct(Fleet $fleet)
     {
         $this->fleet = $fleet;
@@ -27,6 +30,14 @@ class Battlefield
     public function isDeployed()
     {
         return $this->fleet->isDeployed();
+    }
+
+    /**
+     * @param Fleet $fleet
+     */
+    public function setFleet(Fleet $fleet)
+    {
+        $this->fleet = $fleet;
     }
 
     /**

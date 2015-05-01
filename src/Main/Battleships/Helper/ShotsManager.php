@@ -6,18 +6,18 @@ use Battleships\Game\Battlefield;
 use Battleships\Game\Coordinate;
 use Battleships\Game\Ship;
 
-class ShootManager
+class ShotsManager
 {
 
     /**
      * @var array
      */
-    private $allShoots;
+    private $allShots = array();
 
     /**
      * @var array
      */
-    private $hits;
+    private $hits = array();
 
     /**
      * @var Battlefield
@@ -38,7 +38,7 @@ class ShootManager
      */
     public function shoot($coordinate)
     {
-        $this->allShoots[] = $coordinate;
+        $this->allShots[] = $coordinate;
 
         if ($this->battlefield->getFleet()->hasShip($coordinate)) {
             if (!$this->hasHit($coordinate)) {
@@ -55,10 +55,10 @@ class ShootManager
      * @param Coordinate $coordinate
      * @return bool
      */
-    public function hasShoot(Coordinate $coordinate)
+    public function hasShot(Coordinate $coordinate)
     {
-        if (count($this->allShoots)) {
-            return in_array($coordinate, $this->allShoots);
+        if (count($this->allShots)) {
+            return in_array($coordinate, $this->allShots);
         }
 
         return false;
@@ -78,11 +78,40 @@ class ShootManager
     }
 
     /**
+     * @param array $hits
+     */
+    public function setHits(array $hits)
+    {
+        $this->hits = $hits;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHits()
+    {
+        return $this->hits;
+    }
+
+    public function setAllShots(array $shots)
+    {
+        $this->allShots = $shots;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllShots()
+    {
+        return $this->allShots;
+    }
+
+    /**
      * @return int
      */
-    public function getShootsCount()
+    public function getShotsCount()
     {
-        return count($this->allShoots);
+        return count($this->allShots);
     }
 
     /**

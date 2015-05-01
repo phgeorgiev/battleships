@@ -3,6 +3,9 @@
 namespace Battleships\Helper;
 
 use Battleships\Game\Battlefield;
+use Battleships\Game\Fleet;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Serializer\Serializer;
 
 class BattlefieldCreator
 {
@@ -26,10 +29,16 @@ class BattlefieldCreator
      */
     private $deployer;
 
-    public function __construct(Battlefield $battlefield, BattlefieldDeployer $deployManager)
+    /**
+     * @var ShotsManager
+     */
+    private $shotsManager;
+
+    public function __construct(Battlefield $battlefield, BattlefieldDeployer $deployManager, ShotsManager $shotsManager)
     {
         $this->battlefield = $battlefield;
         $this->deployer = $deployManager;
+        $this->shotsManager = $shotsManager;
     }
 
     public function create()
@@ -37,5 +46,20 @@ class BattlefieldCreator
         if (!$this->battlefield->isDeployed()) {
             $this->deployer->deploy();
         }
+    }
+
+    public function createFromSession(Session $session)
+    {
+        if ($session->has('fleet')) {
+            $fleet = unserialize($session->get('fleet'));
+            $shots = unserialize($session->get('shots'));
+            $hits = unserialize($session->get('hits'));
+
+            $this->battlefield->setFleet($fleet);
+            $this->shotsManager->setAllShots($shots);
+            $this->shotsManager->setHits($hits);
+        }
+
+        $this->create();
     }
 }
