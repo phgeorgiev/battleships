@@ -83,6 +83,12 @@
             <argument type="service" id="console_output_manager"/>
         </service>
 
+        <!--Listeners-->
+        <service id="listener.post_controller" class="Event\PostControllerListener">
+            <argument type="service" id="battlefield"/>
+            <argument type="service" id="shots_manager"/>
+        </service>
+
         <!--Framework-->
         <service id="session" class="Symfony\Component\HttpFoundation\Session\Session"/>
 

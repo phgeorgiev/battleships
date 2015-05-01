@@ -90,7 +90,7 @@ class HttpController extends Controller
         }
 
         if ($this->shootManager->isBattlefieldDestroyed()) {
-            $session->invalidate(1);
+            $session->set('gameFinished', true);
             $shotsNumber = $this->shootManager->getShotsCount();
 
             return $this->render('View/finish.html', array('shots' => $shotsNumber));

@@ -4,8 +4,10 @@ namespace Framework\Web;
 
 use Battleships\Game\Battlefield;
 use Battleships\Helper\ShotsManager;
+use Event\ResponseEvent;
 use Framework\ApplicationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -16,7 +18,6 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Serializer\Serializer;
 
 class Application implements ApplicationInterface
 {
@@ -45,11 +46,18 @@ class Application implements ApplicationInterface
     private $isRoutesDefined = false;
 
     /**
-     * @param ContainerBuilder $container
+     * @var EventDispatcher
      */
-    public function __construct(ContainerBuilder $container)
+    private $dispatcher;
+
+    /**
+     * @param ContainerBuilder $container
+     * @param EventDispatcher $dispatcher
+     */
+    public function __construct(ContainerBuilder $container, EventDispatcher $dispatcher)
     {
         $this->container = $container;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -68,6 +76,8 @@ class Application implements ApplicationInterface
 
         $this->matcher = new UrlMatcher($this->routes, $context);
         $this->resolver = new ControllerResolver();
+
+        $this->dispatcher->addListener('post.controller', array($this->container->get('listener.post_controller'), 'onPostController'));
 
         $response = $this->handle($request);
         $response->send();
@@ -96,24 +106,12 @@ class Application implements ApplicationInterface
 
             $response = call_user_func_array($controllerParams, $arguments);
 
-            /** @var Battlefield $battlefield */
-            $battlefield = $this->container->get('battlefield');
-            /** @var ShotsManager $shotsManager */
-            $shotsManager = $this->container->get('shots_manager');
-
-            $fleet = $battlefield->getFleet();
-            $shots = $shotsManager->getAllShots();
-            $hits = $shotsManager->getHits();
-
-            $session->set('fleet', serialize($fleet));
-            $session->set('shots', serialize($shots));
-            $session->set('hits', serialize($hits));
+            $this->dispatcher->dispatch('post.controller', new ResponseEvent($session));
 
             return $response;
         } catch (ResourceNotFoundException $e) {
             return new Response('Not Found', 404);
         } catch (\Exception $e) {
-            var_dump($e);exit;
             return new Response('An error occurred', 500);
         }
     }
