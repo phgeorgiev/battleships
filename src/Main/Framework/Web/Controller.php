@@ -14,7 +14,7 @@ abstract class Controller
      */
     protected $container;
 
-    static $sourcePath = '/src/main/';
+    static $sourcePath = '/src/Main/';
 
     /**
      * @param ContainerBuilder $container
