@@ -4,13 +4,13 @@
 
   "autoload": {
     "psr-4": {
-      "Controller\\": "src/main/Controller",
-      "Battleships\\": "src/main/Battleships",
-      "Framework\\": "src/main/Framework",
-      "Helper\\": "src/main/Helper",
-      "Exception\\": "src/main/Exception",
-      "Output\\": "src/main/Output",
-      "Event\\": "src/main/Event"
+      "Controller\\": "src/Main/Controller",
+      "Battleships\\": "src/Main/Battleships",
+      "Framework\\": "src/Main/Framework",
+      "Helper\\": "src/Main/Helper",
+      "Exception\\": "src/Main/Exception",
+      "Output\\": "src/Main/Output",
+      "Event\\": "src/Main/Event"
     }
   },
 
